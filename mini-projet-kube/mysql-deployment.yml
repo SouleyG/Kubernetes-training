@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-paps
+  namespace: wordpress-production
+  labels:
+    app: mysql
+    env: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql
+        name: mysql
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-data
+        ports:
+          - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          - name: MYSQL_DATABASE
+            value: papsDB
+          - name: MYSQL_USER
+            value: paps
+          - name: MYSQL_PASSWORD
+            value: dada
+      volumes:
+        - name: mysql-data
+          hostPath:
+            path: /data-volume
+            type: Directory
